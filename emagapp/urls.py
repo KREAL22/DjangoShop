@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.urls import reverse_lazy
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth.views import LogoutView, LoginView
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -18,6 +18,6 @@ urlpatterns = [
     path('thank_you/', TemplateView.as_view(template_name='emagapp/thank_you.html'), name='thank_you'),
     path('account/', views.account_view, name='account'),
     path('registration/', views.registration_view, name='registration'),
-    path('login/', views.login_view, name='login'),
+    path('login/', LoginView.as_view(template_name='emagapp/login.html'), name='login'),
     path('logout/', LogoutView.as_view(next_page=reverse_lazy('home')), name='logout'),
 ]

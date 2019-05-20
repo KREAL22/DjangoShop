@@ -1,33 +1,32 @@
 {% extends 'emagapp/home.html' %}
 {% load static  %}
 {% load crispy_forms_tags %}
-
 {% block content %}
 <br>
 <form action='{% url "make_order" %}' method="POST">
-  {% csrf_token %}
-<div class="col-lg-4 col-md-6 mb-4">
-  {{ form.name|as_crispy_field }}
-</div>
-<div class="col-lg-4 col-md-6 mb-4">
-  {{ form.last_name|as_crispy_field }}
-</div>
-<div class="col-lg-4 col-md-6 mb-4">
-  {{ form.phone|as_crispy_field }}
-</div>
-<div class="col-lg-4 col-md-6 mb-4">
-  {{ form.address|as_crispy_field }}
-</div>
-<div class="col-lg-4 col-md-6 mb-4">
-  {{ form.buying_type|as_crispy_field }}
-</div>
-<div class="col-lg-4 col-md-6 mb-4">
-  {{ form.date|as_crispy_field }}
-</div>
-<div class="col-lg-4 col-md-6 mb-4">
-  {{ form.comments|as_crispy_field }}
-</div>
-<input type="submit" class="btn btn-success" value="Оформить заказ">
+	{% csrf_token %}
+	<div class="col-lg-4 col-md-6 mb-4">
+		{{ form.name|as_crispy_field }}
+	</div>
+	<div class="col-lg-4 col-md-6 mb-4">
+		{{ form.last_name|as_crispy_field }}
+	</div>
+	<div class="col-lg-4 col-md-6 mb-4">
+		{{ form.phone|as_crispy_field }}
+	</div>
+	<div class="col-lg-4 col-md-6 mb-4">
+		{{ form.address|as_crispy_field }}
+	</div>
+	<div class="col-lg-4 col-md-6 mb-4">
+		{{ form.buying_type|as_crispy_field }}
+	</div>
+	<div class="col-lg-4 col-md-6 mb-4">
+		{{ form.date|as_crispy_field }}
+	</div>
+	<div class="col-lg-4 col-md-6 mb-4">
+		{{ form.comments|as_crispy_field }}
+	</div>
+	<input type="submit" class="btn btn-success" value="Оформить заказ">
 </form>
 <br>
 <br>
@@ -50,6 +49,5 @@
 		$('#id_date_day').css('width', '50px')
 		$('#id_date_day').css('display', 'inline')
 	})
-
 </script>
 {% endblock content %}

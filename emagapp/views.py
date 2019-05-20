@@ -3,8 +3,8 @@ from .models import Category, Product, CartItem, Cart, Order
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from decimal import Decimal
-from .forms import OrderForm, RegistrationForm, LoginForm
-from django.contrib.auth import login, authenticate
+from .forms import OrderForm, RegistrationForm
+from django.contrib.auth.decorators import login_required
 
 
 def home_view(request):
@@ -72,6 +72,7 @@ def category_view(request, category_slug):
     return render(request, 'emagapp/category.html', context)
 
 
+@login_required
 def cart_view(request):
     try:
         cart_id = request.session['cart_id']
@@ -91,6 +92,7 @@ def cart_view(request):
     return render(request, 'emagapp/cart.html', context)
 
 
+@login_required
 def add_to_cart_view(request):
     try:
         cart_id = request.session['cart_id']
@@ -113,6 +115,7 @@ def add_to_cart_view(request):
     return JsonResponse({'cart_total': cart.items.count(), "cart_total_price": cart.cart_total})
 
 
+@login_required
 def remove_from_cart_view(request):
     try:
         cart_id = request.session['cart_id']
@@ -135,6 +138,7 @@ def remove_from_cart_view(request):
     return JsonResponse({'cart_total': cart.items.count(), "cart_total_price": cart.cart_total})
 
 
+@login_required
 def change_item_qty(request):
     try:
         cart_id = request.session['cart_id']
@@ -156,6 +160,7 @@ def change_item_qty(request):
          "cart_total_price": cart.cart_total})
 
 
+@login_required
 def checkout_view(request):
     try:
         cart_id = request.session['cart_id']
@@ -175,6 +180,7 @@ def checkout_view(request):
     return render(request, 'emagapp/checkout.html', context)
 
 
+@login_required
 def order_create_view(request):
     try:
         cart_id = request.session['cart_id']
@@ -196,6 +202,7 @@ def order_create_view(request):
     return render(request, 'emagapp/order.html', context)
 
 
+@login_required
 def make_order_view(request):
 	try:
 		cart_id = request.session['cart_id']
@@ -233,12 +240,10 @@ def make_order_view(request):
 	return render(request, 'emagapp/order.html', {'categories': categories})
 
 
+@login_required
 def account_view(request):
 	order = Order.objects.filter(user=request.user).order_by('-id')
 	categories = Category.objects.all()
-	for item in order:
-		for new_item in item.items.items.all():
-			print(new_item.item_total)
 	context = {
 		'order': order,
 		'categories': categories
@@ -272,19 +277,3 @@ def registration_view(request):
 	}
 	return render(request, 'emagapp/registration.html', context)
 
-
-def login_view(request):
-	form = LoginForm(request.POST or None)
-	categories = Category.objects.all()
-	if form.is_valid():
-		username = form.cleaned_data['username']
-		password = form.cleaned_data['password']
-		login_user = authenticate(username=username, password=password)
-		if login_user:
-			login(request, login_user)
-			return HttpResponseRedirect(reverse('home'))
-	context = {
-		'form': form,
-		'categories': categories
-	}
-	return render(request, 'emagapp/login.html', context)

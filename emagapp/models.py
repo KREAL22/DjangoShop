@@ -1,7 +1,4 @@
 from django.db import models
-from django.db.models.signals import pre_save
-from django.utils.text import slugify
-from transliterate import translit
 from django.urls import reverse
 from decimal import Decimal
 from django.conf import settings
@@ -11,6 +8,9 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(blank=True)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
@@ -18,17 +18,11 @@ class Category(models.Model):
         return reverse('category_detail', kwargs={'category_slug': self.slug})
 
 
-def pre_save_cat_slug(sender, instance, *args, **kwargs):
-    if not instance.slug:
-        slug = slugify(translit(str(instance.name), reversed=True))
-        instance.slug = slug
-
-
-pre_save.connect(pre_save_cat_slug, sender=Category)
-
-
 class Brand(models.Model):
     name = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -56,6 +50,9 @@ class Product(models.Model):
     available = models.BooleanField(default=True)
     objects = ProductManager()
 
+    class Meta:
+        ordering = ['title']
+
     def __str__(self):
         return self.title
 
@@ -68,6 +65,9 @@ class CartItem(models.Model):
     qty = models.PositiveIntegerField(default=1)
     item_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return f'Cart item for product {self.product.title}'
 
@@ -75,6 +75,9 @@ class CartItem(models.Model):
 class Cart(models.Model):
     items = models.ManyToManyField(CartItem, blank=True)
     cart_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+
+    class Meta:
+        ordering = ['id']
 
     def __str__(self):
         return str(self.id)
@@ -127,6 +130,9 @@ class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     comments = models.TextField()
     status = models.CharField(max_length=100, choices=ORDER_STATUS_CHOICES)
+
+    class Meta:
+        ordering = ['id']
 
     def __str__(self):
         return f"Заказ № {str(self.id)}"

@@ -9,35 +9,33 @@
 <br>
 <br>
 <div class="col-sm-8">
-<h3>{{ product.title }}</h3>
-<p>{{ product.description }}</p>
-
-<hr>
-<p>Цена: <strong>{{ product.price }}</strong></p>
-{% if request.user.is_authenticated %}<a href='#' class='add_to_cart' data-slug='{{ product.slug }}'><button class='btn btn-danger'>Добавить в корзину</button></a>{% endif %}
-<br><br>
-{% if not request.user.is_authenticated %}<p class='text-center'>Заказывать товар могут только авторизированные пользователи. Пожалуйста, <a href='{% url "login" %}'>войдите</a> или <a href='{% url "registration" %}'>зарегистрируйтесь</a></p>{% endif %}
-<script src="{% static 'js/jquery.min.js' %}"></script>
-<script>
+  <h3>{{ product.title }}</h3>
+  <p>{{ product.description }}</p>
+  <hr>
+  <p>Цена: <strong>{{ product.price }}</strong></p>
+  {% if request.user.is_authenticated %}<a href='#' class='add_to_cart' data-slug='{{ product.slug }}'><button class='btn btn-danger'>Добавить в корзину</button></a>{% endif %}
+  <br><br>
+  {% if not request.user.is_authenticated %}<p class='text-center'>Заказывать товар могут только авторизированные пользователи. Пожалуйста, <a href='{% url "login" %}'>войдите</a> или <a href='{% url "registration" %}'>зарегистрируйтесь</a></p>{% endif %}
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script>
     $(document).ready(function(){
-        $('.add_to_cart').on('click', function(e){
-          e.preventDefault()
-          product_slug = $(this).attr('data-slug')
-          data = {
-            product_slug: product_slug
+      $('.add_to_cart').on('click', function(e){
+        e.preventDefault()
+        product_slug = $(this).attr('data-slug')
+        data = {
+          product_slug: product_slug
+        }
+        $.ajax({
+          type: "GET",
+          url:'{% url "add_to_cart" %}',
+          data: data,
+          success: function(data){
+            $("#cart_count").html(data.cart_total)
           }
-          $.ajax({
-            type: "GET",
-            url:'{% url "add_to_cart" %}',
-            data: data,
-            success: function(data){
-              $("#cart_count").html(data.cart_total)
-            }
-
-          })
         })
+      })
     })
-</script>
-<br>
-<br>
-{% endblock content %}
+  </script>
+  <br>
+  <br>
+  {% endblock content %}
