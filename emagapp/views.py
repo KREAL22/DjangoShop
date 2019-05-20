@@ -5,7 +5,7 @@ from django.urls import reverse
 from decimal import Decimal
 from .forms import OrderForm, RegistrationForm
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth import login, authenticate
 
 def home_view(request):
     try:
